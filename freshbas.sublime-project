@@ -1,0 +1,9 @@
+{
+	"folders":
+	[
+		{
+			"path": "/Users/luke/projects/freshbas",
+			"file_exclude_patterns": [ ".gitignore", "*.sublime-workspace" ]
+		}
+	]
+}
