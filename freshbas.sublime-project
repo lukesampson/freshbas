@@ -3,7 +3,8 @@
 	[
 		{
 			"path": "/Users/luke/projects/freshbas",
-			"file_exclude_patterns": [ ".gitignore", "*.sublime-workspace" ]
+			"file_exclude_patterns": [ ".gitignore", "*.sublime-*" ],
+			"folder_exclude_patterns": [ "__pycache__" ]
 		}
 	]
 }
