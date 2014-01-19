@@ -1,4 +1,7 @@
-from datetime import date
+from datetime import date, datetime
+from decimal import *
+
+API_DATE_FORMAT = '%Y-%m-%d 00:00:00'
 
 def last_quarter(before_day):
 	q_months = [1, 4, 7, 10] # months that start a quarter
@@ -19,4 +22,24 @@ def date_str(date):
 	return date.strftime('%-d %b, %Y')
 
 def api_date(date):
-	return date.strftime('%Y-%m-%d 00:00:00')
+	return date.strftime(API_DATE_FORMAT)
+
+def parse_api_date(str_el):
+	return datetime.strptime(str_el.pyval, API_DATE_FORMAT).date()
+
+def tax_amounts(invoice):
+	taxable = 0
+	taxes = {}
+
+	for line in invoice.lines.line:
+		if(line.tax1_name):
+			taxable = taxable + line.amount.pyval
+			add_tax(taxes, line.tax1_name, line.tax1_percent, line.amount.pyval)
+		elif(line.tax2_name):
+			taxable += line.amount.pyval
+			add_tax(taxes, line.tax1_name, line.tax1_percent, line.amount.pyval)
+
+	return taxable, taxes
+
+def add_tax(taxes, name, percent, line_amount):
+	taxes[name] = taxes.get(name, Decimal(0)) + percent / Decimal(100) * line_amount
