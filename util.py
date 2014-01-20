@@ -31,3 +31,14 @@ def api_date(date):
 
 def parse_api_date(str_el):
 	return datetime.strptime(str_el.pyval, API_DATE_FORMAT).date()
+
+def to_decimal(dec):
+	if isinstance(dec, Decimal):
+		return dec
+	if isinstance(dec, DecimalElement): # refreshbooks.api.DecimalElement
+		return dec.pyval
+	return Decimal(dec)
+
+
+add_refreshbooks_path()
+from refreshbooks.api import *
