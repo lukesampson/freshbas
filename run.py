@@ -1,14 +1,13 @@
-import sys, os
+from util import *
+add_refreshbooks_path()
+
 from lxml import objectify
-
-dir = os.path.dirname(os.path.realpath(__file__))
-sys.path.append("{}/../refreshbooks".format(dir))
-
 from refreshbooks import api
+
 from datetime import date, timedelta
 from future import standard_library
 import configparser
-from util import *
+from invoice import *
 
 
 start, end = last_quarter(date.today())
