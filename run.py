@@ -11,9 +11,39 @@ from invoice import *
 from util import *
 import inspect
 
+def all_pages(api_fn, *args, **kwargs):
+	"simplifies getting all pages for API functions that use pagination"
+
+	kwargs['per_page'] = 100 # max allowed by FreshBooks API
+	page = 1
+	combined = None
+	total = 0
+	total_pages = None
+	while total_pages is None or page <= total_pages:
+		kwargs['page'] = page
+		res = api_fn(*args, **kwargs)
+		
+		paged = res.find('*[1]') # get first child of root
+
+		if combined is None:
+			total = int(paged.attrib['total'])
+			total_pages = int(paged.attrib['pages'])
+			combined = res
+		else:
+			original_page = combined.find('*[1]')
+			for el in paged.find('*'):
+				original_page.append(el)
+
+		print('got page {} of {}'.format(paged.attrib['page'], total_pages))
+
+		page += 1
+
+	return combined
+
 def get_payments(c, start, end):
 	print('retrieving payments...')
-	res = c.payment.list(
+	res = all_pages(
+		c.payment.list,
 		date_from=api_date(start),
 		date_to=api_date(end)
 	)
@@ -57,43 +87,12 @@ config.read('config.cfg')
 
 c = api.TokenClient(config.get('auth', 'url'), config.get('auth', 'token'))
 
-# get_payments(c, start, end)
-
-def combine_pages(api_fn, *args, **kwargs):
-	kwargs['per_page'] = 25 # just for testing, to force a few more pages
-	page = 1
-	combined = None
-	total = 0
-	total_pages = None
-	while total_pages is None or page <= total_pages:
-		kwargs['page'] = page
-		res = api_fn(*args, **kwargs)
-		
-		paged = res.find('*[1]') # get first child of root
-
-		if combined is None:
-			total = int(paged.attrib['total'])
-			total_pages = int(paged.attrib['pages'])
-			combined = res
-		else:
-			# append to the original page
-			add_to = combined.find('*[1]')
-			for el in paged.find('*'):
-				add_to.append(el)
-
-		print('got page {} of {}'.format(paged.attrib['page'], total_pages))
-
-		page += 1
-
-	paged = combined.find('*[1]')
-	paged.set('total', str(total))
-	return combined
-
+get_payments(c, start, end)
 
 # expenses
 print('retrieving expenses...')
 
-x = combine_pages(
+x = all_pages(
 	c.expense.list,
 	date_from=api_date(start),
 	date_to=api_date(end)
