@@ -1,14 +1,41 @@
 import sys, os
 from datetime import date, datetime
 from decimal import *
+from refreshbooks.api import *
 
 API_DATE_FORMAT = '%Y-%m-%d 00:00:00'
 
-def add_refreshbooks_path():
-	dir = os.path.dirname(os.path.realpath(__file__))
-	sys.path.append("{}/../refreshbooks".format(dir))
+def all_pages(api_fn, *args, **kwargs):
+	"simplifies getting all pages for API functions that use pagination"
+
+	kwargs['per_page'] = 100 # max allowed by FreshBooks API
+	page = 1
+	combined = None
+	total = 0
+	total_pages = None
+	while total_pages is None or page <= total_pages:
+		kwargs['page'] = page
+		res = api_fn(*args, **kwargs)
+		
+		paged = res.find('*[1]') # get first child of root
+
+		if combined is None:
+			total = int(paged.attrib['total'])
+			total_pages = int(paged.attrib['pages'])
+			combined = res
+		else:
+			original_page = combined.find('*[1]')
+			for el in paged.find('*'):
+				original_page.append(el)
+
+		print('got page {} of {}'.format(paged.attrib['page'], total_pages))
+
+		page += 1
+
+	return combined
 
 def last_quarter(before_day):
+	"get the start and end dates for the last quarter that ended before before_day"
 	q_months = [1, 4, 7, 10] # months that start a quarter
 	from_month = before_day.month
 	end_month = max([m for m in q_months if m <= from_month])
@@ -38,7 +65,3 @@ def to_decimal(dec):
 	if isinstance(dec, DecimalElement): # refreshbooks.api.DecimalElement
 		return dec.pyval
 	return Decimal(dec)
-
-
-add_refreshbooks_path()
-from refreshbooks.api import *

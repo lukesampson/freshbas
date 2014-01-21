@@ -1,4 +1,4 @@
-from invoice import *
+from payment import *
 from decimal import *
 
 def test_get_taxes_for_line_items():
