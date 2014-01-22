@@ -1,4 +1,24 @@
-# Method of preparing BAS
+# FreshBAS
+This program downloads your accounting data from FreshBooks for the last financial quarter, and prints out a table
+of values which you can easily enter into your BAS worksheet.
+
+*Disclaimer: I'm not an accountant, and I don't guarantee that this program will give you valid data!*
+
+# Instructions
+...TODO...
+
+### Assumptions
+
+For this to work for you, the following assumptions must be true:
+
+* You calculate and report GST quarterly
+* You account for GST on a [cash basis](http://www.ato.gov.au/Business/Small-business-entity-concessions/In-detail/GST/Cash-and-non-cash-accounting/)
+* You don't record any other taxes on invoices or expenses besides GST
+* You use the [simplified depreciation rules](http://www.ato.gov.au/business/small-business-entity-concessions/in-detail/income-tax/simplified-depreciation-rules/) (depreciating assets under $6500 can be written off immediately), and all expenses recorded in FreshBooks are $6500 or less.
+* You don't record non-deductible expenses in FreshBooks
+
+
+### Method of preparing BAS manually through FreshBooks
 
 Prep: make sure all received invoices have been marked as expenses.
 
@@ -20,12 +40,3 @@ Expenses: go to Reports > Profit and loss
  PAYG income = (G1) - (1A) - (G11) + (1B)
 
 	* If it's negative, just enter 0. You might record it to offset the next quarter's income, but if it's the final quarter don't worry—it'll be adjusted for in the income tax
-
-
-### Assumptions
-
-For this to work for you, the following assumptions must be true:
-
-* You account for GST on a [cash basis](http://www.ato.gov.au/Business/Small-business-entity-concessions/In-detail/GST/Cash-and-non-cash-accounting/)
-* You don't record any other taxes on invoices or expenses besides GST
-* You use the [simplified depreciation rules](http://www.ato.gov.au/business/small-business-entity-concessions/in-detail/income-tax/simplified-depreciation-rules/) (depreciating assets under $6500 can be written off immediately), and all expenses recorded in FreshBooks are $6500 or less.

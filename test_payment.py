@@ -1,4 +1,4 @@
-from payment import *
+from income import *
 from decimal import *
 
 def test_get_taxes_for_line_items():
@@ -6,7 +6,7 @@ def test_get_taxes_for_line_items():
 		make_line(90.91, ('GST', 10))
 	])
 
-	gst = tax_amounts(invoice)['GST']
+	gst = tax_amounts(invoice)[1]['GST']
 	assert amounts_eq(gst[0], 90.91)
 	assert amounts_eq(gst[1], 9.09)
 
@@ -15,7 +15,7 @@ def test_get_taxes_uses_uppercase_tax_nam():
 		make_line(10, ('gst', 10))
 	])
 
-	taxes = tax_amounts(invoice)
+	untaxed, taxes = tax_amounts(invoice)
 	assert 'GST' in taxes
 	assert amounts_eq(taxes['GST'][1], 1)
 
@@ -26,7 +26,7 @@ def test_part_payment_one_tax():
 		make_line(90.91, ('GST', 10))
 	])
 
-	taxes = tax_amounts(invoice)
+	untaxed, taxes = tax_amounts(invoice)
 	paid = paid_tax_amounts(1000, 205, taxes)
 	gst_taxable = paid['GST'][0]
 	gst = paid['GST'][1]

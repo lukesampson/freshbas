@@ -29,16 +29,20 @@ def get_expenses(client, start, end):
 		raise "At least one expense has more than 10%% GST!"
 
 	untaxed += surplus
+	gst_taxed_ex_gst = gst_taxed_calc - gst
+	total = gst_taxed_calc + untaxed
 
-	print("EXPENSES")
-	print("\t Where GST was charged (ex. GST): ${:10,.2f}".format(gst_taxed_calc - gst))
+	print("EXPENSES\n")
+	print("\t Where GST was charged (ex. GST): ${:10,.2f}".format(gst_taxed_ex_gst))
 	print("\t                             GST: ${:10,.2f}".format(gst))
 	print("\t                                   ----------")
 	print("\t          GST inclusive expenses: ${:10,.2f}".format(gst_taxed_calc))
 	print("\t           Where GST not charged: ${:10,.2f}".format(untaxed))
 	print("\t                                   ==========")
-	print("\t                 TOTAL (inc GST): ${:10,.2f}".format(gst_taxed_calc + untaxed))
+	print("\t                 TOTAL (inc GST): ${:10,.2f}".format(total))
 	print("\t                                   ==========")
+
+	return gst_taxed_ex_gst, gst, gst_taxed_calc, untaxed, total
 
 def add_taxed_expense(taxes, taxname, expense, tax):
 	# note: taxamount can be less than tax % * expense For GST, we'll deal

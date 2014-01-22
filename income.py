@@ -39,8 +39,10 @@ def get_payments(client, start, end):
 	print("\t            GST inclusive income: ${:10,.2f}".format(taxable + gst))
 	print("\t           Where GST not charged: ${:10,.2f}".format(untaxed))
 	print("\t                                   ==========")
-	print("\t            TOTAL (gross income): ${:10,.2f}".format(gross))
+	print("\t                 TOTAL (inc GST): ${:10,.2f}".format(gross))
 	print("\t                                   ==========")
+
+	return taxable, gst, taxable + gst, untaxed, gross
 
 def paid_tax_amounts(invoice_amount, payment, taxes):
 	fraction_paid = to_decimal(payment) / to_decimal(invoice_amount)
