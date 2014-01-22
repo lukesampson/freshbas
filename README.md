@@ -1,11 +1,34 @@
 # FreshBAS
 This program downloads your accounting data from FreshBooks for the last financial quarter, and prints out a table
-of values which you can easily enter into your BAS worksheet.
+of values which you can easily enter into your BAS worksheet, e.g.:
 
-*Disclaimer: I'm not an accountant, and I don't guarantee that this program will give you valid data!*
+```text
+BAS WORKSHEET
 
-# Instructions
-...TODO...
+ G1: $  48000
+G10: $      0
+G11: $  22496
+G14: $    494
+
+ T1: $  23140
+```
+
+*Disclaimer: I'm not an accountant, and I can't guarantee that this program will give you valid data!*
+
+### Instructions
+
+###### Prerequisites:
+
+* Python 3
+* [refreshbooks](https://pypi.python.org/pypi/refreshbooks) package (`pip install refreshbooks`)
+
+###### Setup:
+
+* Copy config.cfg.example to confg.cfg, and fill in your FreshBooks URL and token.
+
+###### Running:
+
+* `python3 run.py`
 
 ### Assumptions
 
