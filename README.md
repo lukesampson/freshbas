@@ -61,5 +61,4 @@ Expenses: go to Reports > Profit and loss
  	* Simple depreciation rules mean capital purchases under $1000 can go under non-capital purchases (G11)
 
  PAYG income = (G1) - (1A) - (G11) + (1B)
-
 	* If it's negative, just enter 0. You might record it to offset the next quarter's income, but if it's the final quarter don't worry—it'll be adjusted for in the income tax
