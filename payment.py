@@ -18,7 +18,7 @@ def get_payments(client, start, end):
 		res = client.invoice.get(invoice_id=invoice_id)
 		inv = res.invoice
 
-		taxes = tax_amounts(inv)
+		untaxed, taxes = tax_amounts(inv)
 		taxes_paid = paid_tax_amounts(inv.amount, payment.amount, taxes)
 
 		# keep running total for each tax
@@ -32,7 +32,15 @@ def get_payments(client, start, end):
 	taxable = tax_totals['GST'][0]
 	gst = tax_totals['GST'][1]
 
-	print("INCOME:\n\tGross: ${:,.2f}, Taxable: ${:,.2f}, GST: ${:,.2f}".format(gross, taxable, gst))
+	print("INCOME\n")
+	print("\t Where GST was charged (ex. GST): ${:10,.2f}".format(taxable))
+	print("\t                             GST: ${:10,.2f}".format(gst))
+	print("\t                                   ----------")
+	print("\t            GST inclusive income: ${:10,.2f}".format(taxable + gst))
+	print("\t           Where GST not charged: ${:10,.2f}".format(untaxed))
+	print("\t                                   ==========")
+	print("\t            TOTAL (gross income): ${:10,.2f}".format(gross))
+	print("\t                                   ==========")
 
 def paid_tax_amounts(invoice_amount, payment, taxes):
 	fraction_paid = to_decimal(payment) / to_decimal(invoice_amount)
@@ -45,6 +53,7 @@ def paid_tax_amounts(invoice_amount, payment, taxes):
 	return paid
 
 def tax_amounts(invoice):
+	untaxed = Decimal(0)
 	taxes = {}
 
 	for line in invoice.lines.line:
@@ -54,8 +63,10 @@ def tax_amounts(invoice):
 			add_tax(taxes, line.tax1_name, line.tax1_percent, amount)
 		elif(line.tax2_name):
 			add_tax(taxes, line.tax2_name, line.tax2_percent, amount)
+		else:
+			untaxed += amount
 
-	return taxes
+	return untaxed, taxes
 
 def add_tax(taxes, name, percent, line_amount):
 	name = str(name).upper()

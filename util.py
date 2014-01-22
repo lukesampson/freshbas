@@ -28,7 +28,7 @@ def all_pages(api_fn, *args, **kwargs):
 			for el in paged.find('*'):
 				original_page.append(el)
 
-		print('got page {} of {}'.format(paged.attrib['page'], total_pages))
+		print('...page {} of {}'.format(paged.attrib['page'], total_pages))
 
 		page += 1
 
