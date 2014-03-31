@@ -10,6 +10,10 @@ def get_expenses(client, start, end):
 
 	untaxed = Decimal(0)
 	taxes = {}
+
+	if res.expenses == '':
+		return 0, 0, 0, 0, 0 # no expenses
+
 	for expense in res.expenses.expense:
 		if expense.tax1_name:
 			add_taxed_expense(taxes, expense.tax1_name, expense.amount, expense.tax1_amount)
