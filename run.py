@@ -30,19 +30,19 @@ inc_taxable, inc_gst, inc_taxable, inc_untaxed, inc_total = inc
 
 print("BAS WORKSHEET\n")
 
-print(" G1: ${:7.0f}".format(inc_total))
+print("G1     (total sales inc GST): ${:7.0f}".format(inc_total))
 
 if(inc_untaxed > 0):
-	print("G3: ${:7.0f}".format(inc_untaxed))
+	print("G3    (other GST-free sales): ${:7.0f}".format(inc_untaxed))
 
-print("G10: ${:7.0f}".format(0)) # assume simple depreciation, and no expenses over $6500
-print("G11: ${:7.0f}".format(exp_total))
+print("G10      (capital purchases): ${:7.0f}".format(0)) # assume simple depreciation, and no expenses over $6500
+print("G11  (non-capital purchases): ${:7.0f}".format(exp_total))
 
 if(exp_untaxed > 0):
-	print("G14: ${:7.0f}".format(exp_untaxed))
+	print("G14     (GST-free purchases): ${:7.0f}".format(exp_untaxed))
 
 print("")
 
 inc_ex_gst = inc_total - inc_gst
 exp_ex_gst = exp_total - exp_gst
-print(" T1: ${:7.0f}".format(inc_ex_gst - exp_ex_gst))
+print("T1 (PAYG installment income): ${:7.0f}".format(inc_ex_gst - exp_ex_gst))
