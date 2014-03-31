@@ -7,7 +7,17 @@ from util import *
 config = configparser.ConfigParser()
 config.read('config.cfg')
 
-start, end = last_quarter(date.today())
+interactive = '-i' in sys.argv
+
+if interactive:
+	print('Which quarter do you want to report on?')
+	start_year = int(input('  start year: '))
+	start_month = int(input('  start month (1,4,7,10): '))
+	start = date(start_year, start_month, 1)
+	end = date(start_year, start_month + 3, 1)
+else:
+	start, end = last_quarter(date.today())
+
 print("BAS Quarter: {} - {}".format(date_str(start), date_str(end - timedelta(days=1))))
 
 client = api.TokenClient(config.get('auth', 'url'), config.get('auth', 'token'))

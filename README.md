@@ -28,7 +28,11 @@ G14: $    494
 
 ###### Running:
 
-* `python3 run.py`
+`python3 run.py`
+This will report on the last quarter that ended before today's date.
+
+`python3 run.py -i`
+Run in interactive mode, allowing you to specify which quarter you want to report on.
 
 ### Assumptions
 
