@@ -1,6 +1,6 @@
 from refreshbooks import api
 from datetime import date, timedelta
-import configparser, income, expense
+import configparser, income, expense, re
 from util import *
 
 
@@ -18,9 +18,14 @@ if interactive:
 else:
 	start, end = last_quarter(date.today())
 
-print("BAS Quarter: {} - {}".format(date_str(start), date_str(end - timedelta(days=1))))
+print("preparing BAS")
+print("  quarter: {} - {}".format(date_str(start), date_str(end - timedelta(days=1))))
 
-client = api.TokenClient(config.get('auth', 'url'), config.get('auth', 'token'))
+url = config.get('auth', 'url')
+token = config.get('auth', 'token')
+username = re.match(r'[^\.]+', url).group(0)
+client = api.TokenClient(url, token)
+print("  for {}".format(username))
 
 inc = income.get_payments(client, start, end)
 exp = expense.get_expenses(client, start, end)
@@ -28,7 +33,7 @@ exp = expense.get_expenses(client, start, end)
 exp_gst_taxed_ex_gst, exp_gst, exp_gst_taxed, exp_untaxed, exp_total = exp
 inc_taxable, inc_gst, inc_taxable, inc_untaxed, inc_total = inc
 
-print("BAS WORKSHEET\n")
+print("BAS WORKSHEET for {}\n".format(username))
 
 print("G1     (total sales inc GST): ${:7.0f}".format(inc_total))
 
