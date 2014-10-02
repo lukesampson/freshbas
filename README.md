@@ -24,7 +24,7 @@ G14: $    494
 
 ###### Setup:
 
-* Copy config.cfg.example to confg.cfg, and fill in your FreshBooks URL and token.
+* Copy config.json.example to confg.json, and fill in your FreshBooks username and token.
 
 ###### Running:
 
