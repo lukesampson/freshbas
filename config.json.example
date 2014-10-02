@@ -1,0 +1,6 @@
+{
+	"auth": {
+		"username (the x in x.freshbooks.com)": "API token",
+		"username2": "API token 2"
+	}
+}

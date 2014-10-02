@@ -1,4 +1,4 @@
 *.sublime-workspace
 __pycache__
 *.pyc
-config.cfg
+config.json

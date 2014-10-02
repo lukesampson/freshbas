@@ -5,6 +5,20 @@ from refreshbooks.api import *
 
 API_DATE_FORMAT = '%Y-%m-%d 00:00:00'
 
+def relpath(*path):
+	basedir = os.path.dirname(os.path.abspath(__file__))
+	return os.path.join(basedir, *path)
+
+def readtext(*path):
+	path = relpath(*path)
+	if not os.path.exists(path):
+		return None
+
+	f = open(path, 'r')
+	text = f.read()
+	f.close()
+	return text
+
 def all_pages(api_fn, *args, **kwargs):
 	"simplifies getting all pages for API functions that use pagination"
 

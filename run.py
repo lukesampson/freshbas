@@ -1,11 +1,22 @@
 from refreshbooks import api
 from datetime import date, timedelta
-import configparser, income, expense, re
+import json, income, expense, re
 from util import *
 
 
-config = configparser.ConfigParser()
-config.read('config.cfg')
+config = json.loads(readtext('config.json'))
+auth = config['auth']
+username, token = next(iter(auth.items()))
+
+if len(config['auth']) > 1:
+	usernames = ", ".join(auth.keys())
+	print("Which credential do you want to use? ({})".format(usernames))
+	username = input()
+	if username not in auth:
+		print("No auth in config.json for {}!", username)
+		exit(1)
+	token = auth[username]
+
 
 interactive = '-i' in sys.argv
 
@@ -21,9 +32,7 @@ else:
 print("preparing BAS")
 print("  quarter: {} - {}".format(date_str(start), date_str(end - timedelta(days=1))))
 
-url = config.get('auth', 'url')
-token = config.get('auth', 'token')
-username = re.match(r'[^\.]+', url).group(0)
+url = "{}.freshbooks.com".format(username)
 client = api.TokenClient(url, token)
 print("  for {}".format(username))
 
