@@ -45,7 +45,10 @@ def get_payments(client, start, end):
 	return taxable, gst, taxable + gst, untaxed, gross
 
 def paid_tax_amounts(invoice_amount, payment, taxes):
-	fraction_paid = to_decimal(payment) / to_decimal(invoice_amount)
+	try:
+		fraction_paid = to_decimal(payment) / to_decimal(invoice_amount)
+	except decimal.InvalidOperation:
+		fraction_paid = 1
 
 	paid = {}
 	for taxname, val in taxes.items():
