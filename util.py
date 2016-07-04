@@ -2,6 +2,7 @@ import sys, os
 from datetime import date, datetime
 from decimal import *
 from refreshbooks.api import *
+from lxml import etree
 
 API_DATE_FORMAT = '%Y-%m-%d 00:00:00'
 
@@ -30,6 +31,7 @@ def all_pages(api_fn, *args, **kwargs):
 	while total_pages is None or page <= total_pages:
 		kwargs['page'] = page
 		res = api_fn(*args, **kwargs)
+		# print(etree.tostring(res, pretty_print=True))
 		
 		paged = res.find('*[1]') # get first child of root
 

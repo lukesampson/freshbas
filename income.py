@@ -11,26 +11,32 @@ def get_payments(client, start, end):
 	gross = 0
 	tax_totals = {}
 
-	for payment in res.payments.payment:
-		print('${:,.2f} payment on {}'.format(to_decimal(payment.amount), date_str(parse_api_date(payment.date))))
-		invoice_id = payment.invoice_id.pyval
+	if res.payments.attrib['total'] == '0':
+		taxable = 0
+		gst = 0
+		untaxed = 0
+		gross = 0
+	else:
+		for payment in res.payments.payment:
+			print('${:,.2f} payment on {}'.format(to_decimal(payment.amount), date_str(parse_api_date(payment.date))))
+			invoice_id = payment.invoice_id.pyval
 
-		res = client.invoice.get(invoice_id=invoice_id)
-		inv = res.invoice
+			res = client.invoice.get(invoice_id=invoice_id)
+			inv = res.invoice
 
-		untaxed, taxes = tax_amounts(inv)
-		taxes_paid = paid_tax_amounts(inv.amount, payment.amount, taxes)
+			untaxed, taxes = tax_amounts(inv)
+			taxes_paid = paid_tax_amounts(inv.amount, payment.amount, taxes)
 
-		# keep running total for each tax
-		for taxname, val in taxes_paid.items():
-			total_taxable, total_tax  = tax_totals.get(taxname, (to_decimal(0), to_decimal(0)))
-			taxable, tax = val
-			tax_totals[taxname] = total_taxable + taxable, total_tax + tax
+			# keep running total for each tax
+			for taxname, val in taxes_paid.items():
+				total_taxable, total_tax  = tax_totals.get(taxname, (to_decimal(0), to_decimal(0)))
+				taxable, tax = val
+				tax_totals[taxname] = total_taxable + taxable, total_tax + tax
 
-		gross += payment.amount.pyval
+			gross += payment.amount.pyval
 
-	taxable = tax_totals['GST'][0]
-	gst = tax_totals['GST'][1]
+		taxable = tax_totals['GST'][0]
+		gst = tax_totals['GST'][1]
 
 	print("INCOME\n")
 	print("\t Where GST was charged (ex. GST): ${:10,.2f}".format(taxable))
